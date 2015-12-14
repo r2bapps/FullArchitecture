@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="cache_delay_time_milli">30</integer>
+
+</resources>

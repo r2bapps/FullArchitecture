@@ -8,8 +8,6 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 
 import r2b.apps.gnome.DependencyManager;
-import r2b.apps.gnome.data.mock.PeopleMock;
-import r2b.apps.gnome.data.mock.WebServerMock;
 
 @RunWith(AndroidJUnit4.class)
 public class SyncRepositoryImplUnitTest extends RepositoryImplUnitTest {
@@ -21,7 +19,6 @@ public class SyncRepositoryImplUnitTest extends RepositoryImplUnitTest {
                 DependencyManager.getRestSource(),
                 DependencyManager.getDbSource(),
                 DependencyManager.getSyncStrategy());
-        people = PeopleMock.getPeople();
     }
 
 }

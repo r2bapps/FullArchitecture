@@ -1,13 +1,17 @@
 package r2b.apps.gnome;
 
 
+import com.squareup.okhttp.mockwebserver.MockResponse;
+import com.squareup.okhttp.mockwebserver.MockWebServer;
+
 import java.io.IOException;
 
+import okio.Buffer;
 import r2b.apps.gnome.data.db.DbSource;
 import r2b.apps.gnome.data.db.DbSourceImpl;
-import r2b.apps.gnome.data.mock.WebServerMock;
 import r2b.apps.gnome.data.rest.RestSource;
 import r2b.apps.gnome.data.rest.RestSourceImpl;
+import r2b.apps.gnome.data.rest.api.BrastlewarkService;
 import r2b.apps.gnome.data.strategy.CachingStrategy;
 import r2b.apps.gnome.data.strategy.SyncStrategy;
 import r2b.apps.gnome.data.strategy.cache.TimeCachingStrategy;
@@ -21,14 +25,11 @@ public final class DependencyManager {
     private final CachingStrategy cachingStrategy;
     private final SyncStrategy syncStrategy;
 
-    protected WebServerMock webServer;
+    private MockWebServer server;
 
     private DependencyManager() {
-        try {
-            webServer = new WebServerMock();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        initMockServer();
+
         // Mocked with web service
         restSource = new RestSourceImpl();
         dbSource = new DbSourceImpl();
@@ -37,6 +38,21 @@ public final class DependencyManager {
                 new TimeCachingStrategy(BaseApplication.getContext().getResources()
                         .getInteger(R.integer.cache_delay_time_milli));
         syncStrategy = new PriorityRestSyncStrategy();
+    }
+
+    private void initMockServer() {
+        try {
+            server = new MockWebServer();
+            Buffer buffer = new Buffer().readFrom(BaseApplication.getContext().getAssets().open("data.json"));
+            server.enqueue(new MockResponse().setBody(buffer));
+
+            server.start();
+
+            server.url(BaseApplication.getContext().getResources().getString(R.string.backend_brastlewark)
+                    + BrastlewarkService.GET_BRASTLEWARK_LIST_PATH);
+        } catch (IOException e) {
+            Logger.e("DependencyManager", e.getMessage(), e);
+        }
     }
 
     /**

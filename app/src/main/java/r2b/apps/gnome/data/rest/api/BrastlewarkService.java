@@ -7,7 +7,7 @@ import retrofit.http.GET;
 public interface BrastlewarkService {
 
     // Usefull for accessing paths when testing
-    String GET_BRASTLEWARK_LIST_PATH = "/mobilefactory-test/master/data.json";
+    String GET_BRASTLEWARK_LIST_PATH = "/develop/app/src/mock/assets/data.json";
 
     @GET(GET_BRASTLEWARK_LIST_PATH)
     BrastlewarkRest getBrastlewark();
